@@ -23,11 +23,8 @@ function ToastPlayground() {
   }
 
   function handleDismiss(id) {
-    const dimissedToastIndex = toasts.findIndex((toast) => toast.id === id);
-    setToasts([
-      ...toasts.slice(0, dimissedToastIndex),
-      ...toasts.slice(dimissedToastIndex + 1),
-    ]);
+    const nextToasts = toasts.filter((toast) => toast.id !== id);
+    setToasts(nextToasts);
   }
 
   return (
