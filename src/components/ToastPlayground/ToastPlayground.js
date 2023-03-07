@@ -12,11 +12,22 @@ function ToastPlayground() {
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
   const [toasts, setToasts] = React.useState([]);
 
-  function addToast() {
+  function addToast(e) {
+    e.preventDefault();
+
     if (message) {
-      setToasts([...toasts, { message, variant }]);
+      setToasts([...toasts, { id: crypto.randomUUID(), message, variant }]);
       setMessage("");
+      setVariant(VARIANT_OPTIONS[0]);
     }
+  }
+
+  function handleDismiss(id) {
+    const dimissedToastIndex = toasts.findIndex((toast) => toast.id === id);
+    setToasts([
+      ...toasts.slice(0, dimissedToastIndex),
+      ...toasts.slice(dimissedToastIndex + 1),
+    ]);
   }
 
   return (
@@ -26,9 +37,13 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toasts.length > 0 && <ToastShelf toasts={toasts}>{message}</ToastShelf>}
+      {toasts.length > 0 && (
+        <ToastShelf handleDismiss={handleDismiss} toasts={toasts}>
+          {message}
+        </ToastShelf>
+      )}
 
-      <div className={styles.controlsWrapper}>
+      <form onSubmit={addToast} className={styles.controlsWrapper}>
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -75,7 +90,7 @@ function ToastPlayground() {
             <Button onClick={addToast}>Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
