@@ -4,18 +4,10 @@ export const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 export const ToastContext = React.createContext();
 
 function ToastProvider({ children }) {
-  const [message, setMessage] = React.useState("");
-  const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
   const [toasts, setToasts] = React.useState([]);
 
-  function addToast(e) {
-    e.preventDefault();
-
-    if (message) {
-      setToasts([...toasts, { id: crypto.randomUUID(), message, variant }]);
-      setMessage("");
-      setVariant(VARIANT_OPTIONS[0]);
-    }
+  function createToast(message, variant) {
+    setToasts([...toasts, { id: crypto.randomUUID(), message, variant }]);
   }
 
   function handleDismiss(id) {
@@ -26,14 +18,9 @@ function ToastProvider({ children }) {
   return (
     <ToastContext.Provider
       value={{
-        message,
-        setMessage,
-        variant,
-        setVariant,
         handleDismiss,
-        addToast,
+        createToast,
         toasts,
-        setToasts,
       }}
     >
       {children}
